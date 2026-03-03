@@ -31,6 +31,7 @@ export interface FeishuConfig {
   authType: 'tenant' | 'user';
   tokenEndpoint: string;
   enableScopeValidation: boolean; // 是否启用权限检查
+  oauthScope?: string; // OAuth 授权时请求的 scope，不设置则用默认完整列表。可设为 "readonly" 使用最小只读权限
 }
 
 /**
@@ -257,6 +258,12 @@ export class Config {
       this.configSources['feishu.enableScopeValidation'] = ConfigSource.ENV;
     } else {
       this.configSources['feishu.enableScopeValidation'] = ConfigSource.DEFAULT;
+    }
+
+    // 处理 OAuth scope（仅 user 认证时生效）。设为 "readonly" 使用最小只读权限，不包含 drive/space 等
+    if (process.env.FEISHU_OAUTH_SCOPE) {
+      feishuConfig.oauthScope = process.env.FEISHU_OAUTH_SCOPE;
+      this.configSources['feishu.oauthScope'] = ConfigSource.ENV;
     }
     
     return feishuConfig;

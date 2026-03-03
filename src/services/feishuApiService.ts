@@ -499,13 +499,23 @@ export class FeishuApiService extends BaseApiService {
 
   /**
    * 获取文档块结构
-   * @param documentId 文档ID或URL
+   * @param documentId 文档ID或URL（支持 docx/docs 链接和 wiki 链接）
    * @param pageSize 每页块数量
    * @returns 文档块数组
    */
   public async getDocumentBlocks(documentId: string, pageSize: number = 500): Promise<any[]> {
     try {
-      const normalizedDocId = ParamUtils.processDocumentId(documentId);
+      // Wiki 链接需先解析为 documentId
+      let normalizedDocId: string;
+      if (documentId.includes('/wiki/')) {
+        const docInfo = await this.getDocumentInfo(documentId, 'wiki');
+        normalizedDocId = docInfo?.documentId || docInfo?.obj_token;
+        if (!normalizedDocId) {
+          throw new Error(`无法从 Wiki 链接获取文档ID: ${documentId}`);
+        }
+      } else {
+        normalizedDocId = ParamUtils.processDocumentId(documentId);
+      }
       const endpoint = `/docx/v1/documents/${normalizedDocId}/blocks`;
       let pageToken = '';
       let allBlocks: any[] = [];

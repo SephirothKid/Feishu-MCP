@@ -3,7 +3,6 @@ import { formatErrorMessage } from '../../utils/error.js';
 import { FeishuApiService } from '../../services/feishuApiService.js';
 import { Logger } from '../../utils/logger.js';
 import {
-  DocumentIdSchema,
   DocumentIdOrWikiIdSchema,
   DocumentTypeSchema,
   // BlockIdSchema,
@@ -181,9 +180,9 @@ export function registerFeishuTools(server: McpServer, feishuService: FeishuApiS
   // 添加获取飞书文档块工具
   server.tool(
     'get_feishu_document_blocks',
-    'Retrieves the block structure information of a Feishu document. Essential to use before inserting content to understand document structure and determine correct insertion positions. Returns a detailed hierarchy of blocks with their IDs, types, and content. Note: For Feishu wiki links (https://xxx.feishu.cn/wiki/xxx), use get_feishu_document_info to get document information, then use the returned documentId for editing operations.',
+    'Retrieves the block structure and content of a Feishu document. Supports both regular document links (https://xxx.feishu.cn/docx/xxx or docs/xxx) and Wiki links (https://xxx.feishu.cn/wiki/xxx). Pass the document URL or ID directly - no need to convert Wiki links first. Returns a detailed hierarchy of blocks with their IDs, types, and content. Use this as the primary tool to read document content from a pasted link.',
     {
-      documentId: DocumentIdSchema,
+      documentId: DocumentIdOrWikiIdSchema,
     },
     async ({ documentId }) => {
       try {

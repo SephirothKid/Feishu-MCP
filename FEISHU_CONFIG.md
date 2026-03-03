@@ -69,6 +69,78 @@
   }
 }
 ```
+
+**仅需阅读文档时的最小权限**（需配合 `FEISHU_SCOPE_VALIDATION=false`）：
+
+* 仅粘贴链接读取文档（不含 drive/space，避免 20027 错误，需同时设置 `FEISHU_OAUTH_SCOPE=readonly`）：
+```
+{
+  "scopes": {
+    "tenant": [
+      "base:app:read",
+      "contact:user.employee_id:readonly",
+      "docs:document.content:read",
+      "docx:document:readonly",
+      "wiki:space:read",
+      "wiki:space:retrieve",
+      "wiki:wiki:readonly",
+      "board:whiteboard:node:read"
+    ],
+    "user": [
+      "base:app:read",
+      "contact:user.employee_id:readonly",
+      "docs:document.content:read",
+      "docx:document:readonly",
+      "wiki:space:read",
+      "wiki:space:retrieve",
+      "wiki:wiki:readonly",
+      "board:whiteboard:node:read",
+      "offline_access"
+    ]
+  }
+}
+```
+
+* 如需文件夹浏览、搜索等，使用带 drive/space 的扩展权限：
+```
+{
+  "scopes": {
+    "tenant": [
+      "base:app:read",
+      "contact:user.employee_id:readonly",
+      "docs:document.content:read",
+      "docx:document:readonly",
+      "drive:drive:readonly",
+      "drive:file",
+      "space:document:retrieve",
+      "wiki:space:read",
+      "wiki:space:retrieve",
+      "wiki:wiki:readonly",
+      "board:whiteboard:node:read",
+      "bitable:app:readonly",
+      "sheets:spreadsheet:readonly"
+    ],
+    "user": [
+      "base:app:read",
+      "contact:user.employee_id:readonly",
+      "docs:document.content:read",
+      "docx:document:readonly",
+      "drive:drive:readonly",
+      "drive:file",
+      "space:document:retrieve",
+      "wiki:space:read",
+      "wiki:space:retrieve",
+      "wiki:wiki:readonly",
+      "board:whiteboard:node:read",
+      "bitable:app:readonly",
+      "sheets:spreadsheet:readonly",
+      "search:docs:read",
+      "offline_access"
+    ]
+  }
+}
+```
+
 #### 3. 发布审批应用（注：**可用范围选择全部**）
 ![发布审批应用](image/release.png)
 #### 4. 等待管理员审批通过
